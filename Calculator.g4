@@ -12,7 +12,7 @@ grammar Calculator;
 prog: stat+ ;
 
 stat: expr NL {System.out.println($expr.i);}
-    | atom NL {System.out.println($atom.i);}
+    | ID '=' expr NL {memory.put($ID.text, Integer.valueOf($expr.i));}
     | COMM
     | NL
     ;
@@ -23,12 +23,7 @@ expr returns [int i]:
     | el=expr op=DIV er=expr { $i = $el.i / $er.i; }
     | el=expr op=ADD er=expr { $i = $el.i + $er.i; }
     | el=expr op=SUB er=expr { $i = $el.i - $er.i; }
-    | el=expr op=EQ er=expr {memory.put($el.text, Integer.valueOf($er.i)); System.out.println("I'm here!");}
-    | e=atom {System.out.println("im an atom");}
-    ;
-
-atom returns [int i]:
-    INT { $i = Integer.parseInt($INT.text); }
+    | INT { $i = Integer.parseInt($INT.text); }
     | ID { $i = memory.containsKey($ID.text) ? memory.get($ID.text) : -1; }
     | '(' e=expr ')' { $i = $e.i; }
     ;
@@ -40,11 +35,17 @@ DIV : '/' ;
 ADD : '+' ;
 SUB : '-' ;
 EQ : '=' ;
-
-COMM : '/*' (.)*? '*/' ; 
-VAR : 'var';  // keyword
-ID : [_A-Za-z]+ ;
 OP : ( MUL | DIV | ADD | SUB ) ;
+
+NOT : '!' ;
+AND : '&&' ;
+OR : '||' ;
+BOOL_OP: ( AND | OR ) ;
+
+COMM : '/*' (.)*? '*/' ;
+
+ID : [_A-Za-z]+ ;
 INT : DIGIT+ ;
+
 NL : ( '\r' )? '\n' ;
 WS : ( ' ' | '\t' )+ -> skip ;
