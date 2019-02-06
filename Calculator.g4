@@ -2,21 +2,23 @@ grammar Calculator;
 
 @header {
     import java.util.HashMap;
+    import java.util.Scanner;
 }
 
 @members {
     /* Storage to save variables */
     HashMap<String, Integer> memory = new HashMap();
+    Scanner sc = new Scanner(System.in);
 }
 
 prog: stat+ ;
 
 stat: expr NL {System.out.println($expr.i);}
     | ID '=' expr NL {memory.put($ID.text, Integer.valueOf($expr.i));}
+    | READ '()' {System.out.println(sc.nextInt());}
     | COMM NL
     | NL
     ;
-
 
 expr returns [int i]: 
     el=expr op=MUL er=expr { $i = $el.i * $er.i; }
@@ -32,6 +34,10 @@ expr returns [int i]:
     ;
 
 fragment DIGIT : [0-9] ;
+
+READ : 'read' ;
+SQRT : 'sqrt' ;
+PRINT : 'print' ;
 
 MUL : '*' ;
 DIV : '/' ;
