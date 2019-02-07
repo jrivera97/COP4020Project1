@@ -8,14 +8,38 @@ grammar Calculator;
 
 @members {
     /* Storage to save variables */
-    HashMap<String, Integer> memory = new HashMap();
+    HashMap<String, HashMap<Integer, Double>> memory = new HashMap<String, HashMap<Integer, Double>>();
     Scanner sc = new Scanner(System.in);
 }
 
 prog: stat+ ;
 
 stat: expr NL { if ($expr.i % 1 == 0) { System.out.println((int)$expr.i); } else { System.out.println($expr.i); } }
-    | ID '=' expr NL { memory.put($ID.text, (int)$expr.i); }
+    | ID '=' e=expr NL {
+        if (memory.containsKey($ID.text)) {
+            memory.get($ID.text).replace(0, $e.i);
+        }
+        else {
+            HashMap array = new HashMap<Integer, Double>();
+            array.put(0, $e.i);
+            memory.put($ID.text, array);
+        }
+    }
+    | ID '[' ind=expr ']' '=' e=expr {
+        if (memory.containsKey($ID.text)) { // has array
+            if (memory.get($ID.text).containsKey($ind.i)) { // has index
+                memory.get($ID.text).replace((int)$ind.i, $e.i);
+            }
+            else {
+                memory.get($ID.text).put((int)$ind.i, $e.i);
+            }
+        }
+        else {
+            HashMap array = new HashMap<Integer, Double>();
+            array.put((int)$ind.i, $e.i);
+            memory.put($ID.text, array);
+        }
+    }
     | '"' ID? '"' NL { System.out.print($ID.text != null? $ID.text : ""); }
     | COMM NL
     | NL
@@ -30,10 +54,11 @@ expr returns [double i]:
     | el=expr op=AND er=expr { $i = (($el.i != 0 ? true : false) && ($er.i != 0 ? true : false)) ? 1 : 0; }
     | el=expr op=OR er=expr { $i = (($el.i != 0 ? true : false) || ($er.i != 0 ? true : false)) ? 1 : 0; }
     | op=NOT el=expr { $i = (!($el.i != 0 ? true : false) ? 1 : 0); }
-    | func {$i = $func.i;}
     | SUB expr { $i = -$expr.i; }
-    | INT { $i = Integer.parseInt($INT.text); }
-    | ID { $i = memory.containsKey($ID.text) ? memory.get($ID.text) : -1; }
+    | INT { $i = Double.valueOf($INT.text); }
+    | ID '[' e=expr ']' { $i = memory.containsKey($ID.text) ? (memory.get($ID.text)).get((int)$e.i) : -1; }
+    | ID { $i = memory.containsKey($ID.text) ? (memory.get($ID.text).get(0)) : -1; }
+    | func {$i = $func.i;}
     ;
 
 func returns [double i]:
@@ -69,7 +94,7 @@ NOT : '!' ;
 COMM : '/*' (.)*? '*/' ;
 
 ID : [_A-Za-z]+ ;
-INT : DIGIT+ ;
+INT : DIGIT+ ('.'[0-9]+)? ;
 
 NL : ( '\r' )? '\n' ;
 WS : ( ' ' | '\t' )+ -> skip ;
