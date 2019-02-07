@@ -14,14 +14,14 @@ grammar Calculator;
 
 prog: stat+ ;
 
-stat: expr NL { System.out.println($expr.i); }
-    | ID '=' expr NL { memory.put($ID.text, Integer.valueOf($expr.i)); }
+stat: expr NL { if ($expr.i % 1 == 0) { System.out.println((int)$expr.i); } else { System.out.println($expr.i); } }
+    | ID '=' expr NL { memory.put($ID.text, (int)$expr.i); }
     | '"' ID? '"' NL { System.out.print($ID.text != null? $ID.text : ""); }
     | COMM NL
     | NL
     ;
 
-expr returns [int i]: 
+expr returns [double i]: 
     '(' e=expr ')' { $i = $e.i; }
     | el=expr op=MUL er=expr { $i = $el.i * $er.i; }
     | el=expr op=DIV er=expr { $i = $el.i / $er.i; }
@@ -35,10 +35,11 @@ expr returns [int i]:
     | ID { $i = memory.containsKey($ID.text) ? memory.get($ID.text) : -1; }
     ;
 
-func returns [int i]:
+func returns [double i]:
     f=READ '()' { $i = sc.nextInt(); }
     | f=PRINT '(' a=expr ')' { $i = $a.i; }
-    //| f=SQRT '(' a=expr ')' { $i = Math.sqrt($a.i); System.out.println($a.i); }
+    | f=SQRT'(' a=expr ')' { $i = Math.sqrt($a.i); }
+    | 
     ;
 
 fragment DIGIT : [0-9] ;
@@ -60,7 +61,7 @@ NOT : '!' ;
 COMM : '/*' (.)*? '*/' ;
 
 ID : [_A-Za-z]+ ;
-INT : DIGIT+ ;
+INT : ('-')? DIGIT+ ;
 
 NL : ( '\r' )? '\n' ;
 WS : ( ' ' | '\t' )+ -> skip ;
