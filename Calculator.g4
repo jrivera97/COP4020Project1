@@ -39,7 +39,10 @@ func returns [double i]:
     f=READ '()' { $i = sc.nextInt(); }
     | f=PRINT '(' a=expr ')' { $i = $a.i; }
     | f=SQRT'(' a=expr ')' { $i = Math.sqrt($a.i); }
-    | 
+    | f=EX '(' a=expr ')' { $i = Math.exp($a.i); }
+    | f=COS'(' a=expr ')' { $i = Math.cos($a.i); }
+    | f=SIN'(' a=expr ')' { $i = Math.sin($a.i); }
+    | f=LOG '(' a=expr ')' { $i = Math.log($a.i); }
     ;
 
 fragment DIGIT : [0-9] ;
@@ -47,6 +50,10 @@ fragment DIGIT : [0-9] ;
 READ : 'read' ;
 SQRT : 'sqrt' ;
 PRINT : 'print' ;
+EX : 'e';
+COS : 'c';
+SIN : 's';
+LOG : 'l';
 
 MUL : '*' ;
 DIV : '/' ;
@@ -65,3 +72,4 @@ INT : ('-')? DIGIT+ ;
 
 NL : ( '\r' )? '\n' ;
 WS : ( ' ' | '\t' )+ -> skip ;
+
