@@ -94,8 +94,7 @@ NOT : '!' ;
 COMM : '/*' (.)*? '*/' ;
 
 ID : [_A-Za-z]+ ;
-INT : DIGIT+ ('.'[0-9]+)? ;
+INT : DIGIT+ ('.' DIGIT+)? ;
 
 NL : ( '\r' )? '\n' ;
 WS : ( ' ' | '\t' )+ -> skip ;
-
