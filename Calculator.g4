@@ -49,8 +49,8 @@ expr returns [double i]:
     '(' e=expr ')' { $i = $e.i; }
     | el=expr op=MUL er=expr { $i = $el.i * $er.i; }
     | el=expr op=DIV er=expr { $i = $el.i / $er.i; }
-    | el=expr op=ADD er=expr { $i = $el.i + $er.i; }
     | el=expr op=SUB er=expr { $i = $el.i - $er.i; }
+    | el=expr op=ADD er=expr { $i = $el.i + $er.i; }
     | el=expr op=AND er=expr { $i = (($el.i != 0 ? true : false) && ($er.i != 0 ? true : false)) ? 1 : 0; }
     | el=expr op=OR er=expr { $i = (($el.i != 0 ? true : false) || ($er.i != 0 ? true : false)) ? 1 : 0; }
     | op=NOT el=expr { $i = (!($el.i != 0 ? true : false) ? 1 : 0); }
@@ -83,8 +83,8 @@ LN : 'l';
 
 MUL : '*' ;
 DIV : '/' ;
-ADD : '+' ;
 SUB : '-' ;
+ADD : '+' ;
 EQ : '=' ;
 
 AND : '&&' ;
