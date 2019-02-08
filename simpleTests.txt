@@ -70,12 +70,12 @@ Generated output:   5
 
 /*Test Statement Expressions*/
 "HelloWorld"
-
-
+print(6)
 
 /*Expected output:  HelloWorld
-Generated output:  HelloWorld
-                    */
+                    6
+Generated output:   HelloWorld
+                    6 */
 
 c(0)
 c(3.14159265)
@@ -94,7 +94,7 @@ e(3)
                     1
                     20.085536923187668
 
-Generated output:   1 <--this one is on the same line as HelloWorld
+Generated output:   1 
                     -1
                     0
                     3.5897930298416118E-9
