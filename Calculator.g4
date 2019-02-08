@@ -47,6 +47,7 @@ stat: expr NL { if ($expr.i % 1 == 0) { System.out.println((int)$expr.i); } else
 
 expr returns [double i]: 
     '(' e=expr ')' { $i = $e.i; }
+    | SUB expr { $i = -$expr.i; }
     | el=expr op=MUL er=expr { $i = $el.i * $er.i; }
     | el=expr op=DIV er=expr { $i = $el.i / $er.i; }
     | el=expr op=SUB er=expr { $i = $el.i - $er.i; }
@@ -54,7 +55,6 @@ expr returns [double i]:
     | el=expr op=AND er=expr { $i = (($el.i != 0 ? true : false) && ($er.i != 0 ? true : false)) ? 1 : 0; }
     | el=expr op=OR er=expr { $i = (($el.i != 0 ? true : false) || ($er.i != 0 ? true : false)) ? 1 : 0; }
     | op=NOT el=expr { $i = (!($el.i != 0 ? true : false) ? 1 : 0); }
-    | SUB expr { $i = -$expr.i; }
     | INT { $i = Double.valueOf($INT.text); }
     | ID '[' e=expr ']' { $i = memory.containsKey($ID.text) ? (memory.get($ID.text)).get((int)$e.i) : -1; }
     | ID { $i = memory.containsKey($ID.text) ? (memory.get($ID.text).get(0)) : -1; }

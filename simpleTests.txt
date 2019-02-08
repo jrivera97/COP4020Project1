@@ -22,7 +22,7 @@ x
                     10           
 
 generated output: 100
-                    -1 <- for some reason our calculator did not like this expression, but it subtracts right with others
+                    -5
                     1
                     9
                     10 */  
@@ -72,10 +72,8 @@ Generated output:   5
 "HelloWorld"
 print(6)
 
-/*Expected output:  HelloWorld
-                    6
-Generated output:   HelloWorld
-                    6 */
+/*Expected output:  HelloWorld6
+Generated output:   HelloWorld6 */
 
 c(0)
 c(3.14159265)
